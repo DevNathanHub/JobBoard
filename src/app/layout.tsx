@@ -23,17 +23,16 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  pathname: string;
+  pathname: string; // Include pathname in props
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children, pathname }: RootLayoutProps) {
   return (
     <html lang="en">
       <ClerkProvider>
         <body className={`${inter.className} min-h-screen flex flex-col`}>
-          <NextSSRPlugin
-            routerConfig={extractRouterConfig(ourFileRouter)}
-          />
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          
           <header className="flex items-center h-20 gap-4 px-4 border-b border-black border-solid sm:px-8 border-opacity-20">
             <div className="flex items-center gap-2 sm:gap-4">
               <Link href="/">
@@ -56,7 +55,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </SignedIn>
             </div>
           </header>
+
           <main className="grow">{children}</main>
+
           <footer className="flex items-center h-20 gap-1 px-8 font-medium border-t md:px-20">
             <nav className="flex justify-end grow sm:gap-2">
               <a
