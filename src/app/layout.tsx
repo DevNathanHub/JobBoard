@@ -1,3 +1,5 @@
+// src/app/layout.tsx
+
 import {
   ClerkProvider,
   SignedIn,
@@ -22,11 +24,10 @@ export const metadata: Metadata = {
 };
 
 interface RootLayoutProps {
-  children: React.ReactNode;
-  pathname: string; // Include pathname in props
+  children: React.ReactNode; // Only include children
 }
 
-export default function RootLayout({ children, pathname }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <ClerkProvider>
@@ -46,8 +47,8 @@ export default function RootLayout({ children, pathname }: RootLayoutProps) {
               </Link>
             </div>
             <div className="flex-grow flex justify-center">
-              {/* Pass pathname as a prop to Header */}
-              <Header pathname={pathname} />
+              {/* Header will handle pathname internally */}
+              <Header />
             </div>
             <div>
               <SignedIn>
@@ -97,6 +98,7 @@ export default function RootLayout({ children, pathname }: RootLayoutProps) {
   );
 }
 
+// SVG Icon Components
 function Docs() {
   return (
     <svg
