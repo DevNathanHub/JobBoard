@@ -1,15 +1,6 @@
 import Link from "next/link";
 
-interface HeaderProps {
-  pathname: string;
-}
-
-const Header: React.FC<HeaderProps> = () => {
-  // // Check if pathname is 'dashboard' and conditionally render links
-  // if (pathname === "/dashboard") {
-  //   return null; // Return null if you don't want to render anything
-  // }
-
+const Header: React.FC = () => {
   return (
     <header className="text-black py-4">
       <div className="container mx-auto flex justify-between items-center px-4 sm:px-8">
