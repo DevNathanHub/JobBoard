@@ -4,11 +4,11 @@ interface HeaderProps {
   pathname: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ pathname }) => {
-  // Check if pathname is 'dashboard' and conditionally render links
-  if (pathname === "/dashboard") {
-    return null; // Return null if you don't want to render anything
-  }
+const Header: React.FC<HeaderProps> = () => {
+  // // Check if pathname is 'dashboard' and conditionally render links
+  // if (pathname === "/dashboard") {
+  //   return null; // Return null if you don't want to render anything
+  // }
 
   return (
     <header className="text-black py-4">
