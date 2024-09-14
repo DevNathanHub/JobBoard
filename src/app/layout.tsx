@@ -26,10 +26,7 @@ interface RootLayoutProps {
   pathname: string;
 }
 
-export default function RootLayout({
-  children,
-  pathname, // Accept pathname as a prop
-}: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <ClerkProvider>
