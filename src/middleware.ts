@@ -9,7 +9,6 @@ export default authMiddleware({
   publicRoutes: ["/"],
   afterAuth: async (auth, req: NextRequest) => {
     const { userId, sessionClaims } = auth
-
     // For user visiting /onboarding, don't try and redirect
     if (userId && req.nextUrl.pathname === "/") {
       return NextResponse.next();
@@ -20,10 +19,10 @@ export default authMiddleware({
 
     // Catch users who doesn't have `onboardingComplete: true` in PublicMetata
     // Redirect them to the /onboading out to complete onboarding
-    // if (userId && !sessionClaims?.metadata?.onboardingComplete) {
-    //   const onboardingUrl = new URL("/dashboard", req.url);
-    //   return NextResponse.redirect(onboardingUrl)
-    // }
+    if (userId && !sessionClaims?.metadata?.onboardingComplete) {
+      const onboardingUrl = new URL("/dashboard", req.url);
+      return NextResponse.redirect(onboardingUrl)
+    }
 
     // User is logged in and the route is protected - let them view.
     if (userId && !auth.isPublicRoute) return NextResponse.next()

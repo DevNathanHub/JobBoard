@@ -6,7 +6,7 @@ function Rates() {
       {/* Slanted background */}
       <div className="absolute top-0 left-0 w-full h-full transform rotate-[-40deg] origin-bottom-left bg-blue-500"></div>
 
-      <div className="relative max-w-4xl mx-auto flex flex-col md:flex-row gap-6 pt-24">
+      <div className="relative max-w-8xl mx-auto flex flex-col md:flex-row gap-6 pt-24">
         <div className=" p-6  shadow-lg flex-1 z-10 isolate aspect-video w-96 rounded-xl bg-white/80 ring-1 ring-black/5">
           <h2 className="text-2xl font-bold text-blue-900 mb-4">From</h2>
           <p className="text-xl font-semibold text-white mb-4">600 Kenyan Shillings</p>

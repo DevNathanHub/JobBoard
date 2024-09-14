@@ -1,9 +1,17 @@
-// app/components/Header.tsx
 import Link from "next/link";
 
-function Header() {
+interface HeaderProps {
+  pathname: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ pathname }) => {
+  // Check if pathname is 'dashboard' and conditionally render links
+  if (pathname === "/dashboard") {
+    return null; // Return null if you don't want to render anything
+  }
+
   return (
-    <header className= "text-black py-4 ">
+    <header className="text-black py-4">
       <div className="container mx-auto flex justify-between items-center px-4 sm:px-8">
         <nav>
           <ul className="flex space-x-6 sm:space-x-8">
@@ -37,6 +45,6 @@ function Header() {
       </div>
     </header>
   );
-}
+};
 
 export default Header;
