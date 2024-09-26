@@ -2,9 +2,8 @@ import axios from 'axios';
 import { Job } from '../../../types/job';
 
 export async function getJobs(query: string): Promise<Job[]> {
-  console.log("query++++++++++++++", query);
   if(!query){
-    query = 'java';
+    query = 'writing';
   }
   const options = {
     method: 'GET',
@@ -16,7 +15,7 @@ export async function getJobs(query: string): Promise<Job[]> {
       date_posted: 'all',
     },
     headers: {
-      'x-rapidapi-key': "482b17a595msh24113b27b19c305p1a9114jsn48d19f1123ed",
+      'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPID_API_KEY,
       'x-rapidapi-host': 'jsearch.p.rapidapi.com',
     },
   };
