@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { Job } from '../../../types/job';
-import JobFilters from './filters';
+import { getJobs } from '../lib/getJobs';
+// import FilterComponent from './filter';
 
 interface JobListProps {
   jobs: Job[];
@@ -11,30 +12,66 @@ interface JobListProps {
 export default function JobList({ jobs }: JobListProps) {
   const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs || []);
   const [query, setQuery] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchJobs = async (searchQuery: string) => {
+    setLoading(true);
+    setError(null);
+    
     try {
-      const response = await fetch(`/api/job?query=${searchQuery}`);
-      const data: Job[] = await response.json();
+      const response = await getJobs(searchQuery);
+
+      if (!response) throw new Error('Failed to fetch jobs');
+      
+      const data: Job[] = response;
       setDisplayedJobs(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Failed to fetch jobs', error);
+    } catch (err) {
+      console.error('Failed to fetch jobs', err);
+      setError('Failed to fetch jobs. Please try again.');
       setDisplayedJobs([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleFilterChange = (searchQuery: string) => {
-    setQuery(searchQuery);
-    fetchJobs(searchQuery);
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    fetchJobs(query); // Use placeholder if query is empty
   };
-
-  if (displayedJobs.length === 0) {
-    return <p className="text-gray-500 text-center mt-4">No jobs found.</p>;
-  }
 
   return (
     <div className="space-y-6">
-      <JobFilters onFilterChange={handleFilterChange} />
+      {/* Search Form */}
+      <form onSubmit={handleSearchSubmit} className="mb-4 flex items-center space-x-2">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search for jobs (e.g., Node.js developer in New-York, USA)"
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+        >
+          Search
+        </button>
+      </form>
+      {/* <FilterComponent/> */}
+
+     
+      {/* Display Loading Indicator */}
+      {loading && <p className="text-center text-blue-500">Loading jobs...</p>}
+
+      {/* Display Error Message */}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {/* Display Jobs */}
+      {displayedJobs.length === 0 && !loading && !error && (
+        <p className="text-gray-500 text-center mt-4">No jobs found.</p>
+      )}
+
       <ul className="space-y-4">
         {displayedJobs.map((job, index) => (
           <li
