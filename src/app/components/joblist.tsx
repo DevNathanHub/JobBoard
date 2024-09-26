@@ -1,44 +1,61 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Job } from '../../../types/job';
 import { getJobs } from '../lib/getJobs';
-// import FilterComponent from './filter';
+import debounce from 'lodash.debounce'; // Use lodash debounce for better performance
 
-interface JobListProps {
-  jobs: Job[];
-}
+export default function JobList() {
+  const [query, setQuery] = useState<string>(''); // User search input
+  const [displayedJobs, setDisplayedJobs] = useState<Job[]>([]); // Jobs to display
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
-export default function JobList({ jobs }: JobListProps) {
-  const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs || []);
-  const [query, setQuery] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchJobs = async (searchQuery: string) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await getJobs(searchQuery);
-
-      if (!response) throw new Error('Failed to fetch jobs');
+  // Debounced fetchJobs function to avoid too many requests during typing
+  const fetchJobs = useCallback(
+    debounce(async (searchQuery: string) => {
+      setLoading(true);
+      setError(null);
       
-      const data: Job[] = response;
-      setDisplayedJobs(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error('Failed to fetch jobs', err);
-      setError('Failed to fetch jobs. Please try again.');
-      setDisplayedJobs([]);
-    } finally {
-      setLoading(false);
+      try {
+        const response = await getJobs(searchQuery);
+        if (!response) throw new Error('Failed to fetch jobs');
+
+        setDisplayedJobs(Array.isArray(response) ? response : []);
+      } catch (err) {
+        console.error('Failed to fetch jobs', err);
+        setError('Failed to fetch jobs. Please try again.');
+        setDisplayedJobs([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 500), // 500ms debounce to reduce network requests during typing
+    []
+  );
+
+  // Fetch jobs when query changes
+  useEffect(() => {
+    if (query.trim()) {
+      fetchJobs(query);
     }
+  }, [query, fetchJobs]);
+
+  // Update query state and trigger debounce
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
   };
 
+  // Handle form submit to trigger the fetch immediately
   const handleSearchSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    fetchJobs(query); // Use placeholder if query is empty
+    fetchJobs(query);
   };
+  useEffect(()=>{
+   syncSearch(); 
+  }, [])
+ async function syncSearch(){
+  fetchJobs(query);
+ };
 
   return (
     <div className="space-y-6">
@@ -47,8 +64,8 @@ export default function JobList({ jobs }: JobListProps) {
         <input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for jobs (e.g., Node.js developer in New-York, USA)"
+          onChange={handleQueryChange}
+          placeholder="Search for jobs (e.g., Writing Jobs in New-York, USA)"
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
@@ -58,20 +75,19 @@ export default function JobList({ jobs }: JobListProps) {
           Search
         </button>
       </form>
-      {/* <FilterComponent/> */}
-
      
-      {/* Display Loading Indicator */}
+      {/* Loading State */}
       {loading && <p className="text-center text-blue-500">Loading jobs...</p>}
 
-      {/* Display Error Message */}
+      {/* Error State */}
       {error && <p className="text-center text-red-500">{error}</p>}
 
-      {/* Display Jobs */}
-      {displayedJobs.length === 0 && !loading && !error && (
+      {/* No Jobs Found State */}
+      {!loading && !error && displayedJobs.length === 0 && (
         <p className="text-gray-500 text-center mt-4">No jobs found.</p>
       )}
 
+      {/* Job List */}
       <ul className="space-y-4">
         {displayedJobs.map((job, index) => (
           <li
@@ -83,7 +99,9 @@ export default function JobList({ jobs }: JobListProps) {
               <p className="text-sm text-gray-500">{job.job_country || 'No location available'}</p>
             </div>
             <p className="text-gray-700">{job.employer_name || 'No company name available'}</p>
-            <p className="text-gray-500">{job.job_description?.substring(0, 100) || 'No description available'}...</p>
+            <p className="text-gray-500">
+              {job.job_description?.substring(0, 100) || 'No description available'}...
+            </p>
             <a
               href={job.job_google_link}
               className="text-blue-500 hover:text-blue-700"

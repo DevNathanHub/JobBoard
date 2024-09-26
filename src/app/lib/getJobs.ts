@@ -3,7 +3,7 @@ import { Job } from '../../../types/job';
 
 export async function getJobs(query: string): Promise<Job[]> {
   if(!query){
-    query = 'writing';
+    query = 'Writer';
   }
   const options = {
     method: 'GET',
