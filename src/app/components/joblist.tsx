@@ -12,7 +12,7 @@ export default function JobList() {
   const [displayedJobs, setDisplayedJobs] = useState<Job[]>([]); // Jobs to display
   const [loading, setLoading] = useState<boolean>(false); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJob, setSelectedJob] = useState('');
   const router = useRouter();
 
   // Debounced fetchJobs function to avoid too many requests during typing
@@ -56,8 +56,8 @@ export default function JobList() {
   };
 
  
-  const handleJobClick = (job) => {
-    setSelectedJob(job);
+  const handleJobClick = (job: Job) => {
+    setSelectedJob(job.job_id);
   };
 
   return (
