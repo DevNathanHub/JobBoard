@@ -1,7 +1,7 @@
 import React from 'react';
 import { auth } from '@clerk/nextjs';
-import { Job } from './job';
-import { Account } from './account';
+import { Job } from '../../../types/job';
+import { Account } from '../../../types/account';
 
 export default function Dashboard() {
   const { userId, sessionClaims } = auth();
