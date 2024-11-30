@@ -1,7 +1,7 @@
 import React from 'react';
 import { auth } from '@clerk/nextjs';
-import { Job } from '../../../types/job';
-import { Account } from '../../../types/account';
+import { Job } from './job';
+import { Account } from './account';
 
 export default function Dashboard() {
   const { userId, sessionClaims } = auth();
@@ -12,11 +12,54 @@ export default function Dashboard() {
     email: 'example@jobseeker.com',
     wallet_balance: 105.75,
     applied_jobs: [
-      { id: '1', title: 'Frontend Developer', company: 'TechCorp', status: 'Applied' },
-      { id: '2', title: 'Backend Engineer', company: 'Innovatech', status: 'Interviewing' },
+      {
+        job_id: '1',
+        employer_name: 'TechCorp',
+        job_title: 'Frontend Developer',
+        job_employment_type: 'Full-time',
+        job_is_remote: true,
+        job_location: 'New York, NY',
+        job_city: 'New York',
+        job_country: 'USA',
+        job_posted_human_readable: '2 days ago',
+        job_apply_link: 'https://apply.example.com',
+        job_min_salary: 60000,
+        job_max_salary: 80000,
+        job_salary_currency: 'USD',
+        job_description: 'Develop and maintain web interfaces...',
+        job_benefits: 'Health insurance, 401k match',
+        job_required_skills: ['JavaScript', 'React', 'CSS'],
+        job_posting_language: 'en',
+        job_google_link: 'https://jobsearch.google.com',
+        job_offer_expiration_datetime_utc: '2024-12-01T23:59:59Z',
+        job_apply_is_direct: true,
+        job_salary_period: 'yearly',
+      },
     ],
     saved_jobs: [
-      { id: '3', title: 'UI/UX Designer', company: 'Creative Studios', status: 'Saved' },
+      {
+        job_id: '2',
+        employer_name: 'Innovatech',
+        job_title: 'Backend Engineer',
+        job_employment_type: 'Contract',
+        job_is_remote: false,
+        job_location: 'San Francisco, CA',
+        job_city: 'San Francisco',
+        job_country: 'USA',
+        job_posted_human_readable: '5 days ago',
+        job_apply_link: 'https://apply.innovatech.com',
+        job_min_salary: 70000,
+        job_max_salary: 95000,
+        job_salary_currency: 'USD',
+        job_description: 'Build scalable backend systems...',
+        job_benefits: 'Remote work flexibility',
+        job_required_skills: ['Node.js', 'Express', 'MongoDB'],
+        job_posting_language: 'en',
+        job_google_link: 'https://jobsearch.google.com',
+        job_offer_expiration_datetime_utc: '2024-11-30T23:59:59Z',
+        job_apply_is_direct: false,
+        job_salary_period: 'yearly',
+      },
     ],
     subscription_type: 'Premium',
     created_at: '2023-10-01',
@@ -26,7 +69,7 @@ export default function Dashboard() {
     <div>
       <header className="bg-white py-6 px-8 shadow">
         <h1 className="text-3xl font-semibold text-gray-800">
-          👋 Hello, {sessionClaims?.firstName || 'User'}
+          👋 Hello, {sessionClaims?.firstName || 'Job Seeker'}
         </h1>
         <p className="text-gray-500 mt-2">Welcome back to your dashboard!</p>
       </header>
@@ -36,46 +79,47 @@ export default function Dashboard() {
           <>
             {/* Stats Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="border border-blue-100 p-6 rounded-lg shadow">
+              <div className="bg-blue-100 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-bold text-blue-800">Wallet Balance</h2>
                 <p className="text-2xl font-semibold text-gray-700">${account.wallet_balance}</p>
               </div>
-              <div className="border border-green-100 p-6 rounded-lg shadow">
+              <div className="bg-green-100 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-bold text-green-800">Applied Jobs</h2>
                 <p className="text-2xl font-semibold text-gray-700">{account.applied_jobs.length}</p>
               </div>
-              <div className="border border-yellow-100 p-6 rounded-lg shadow">
+              <div className="bg-yellow-100 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-bold text-yellow-800">Saved Jobs</h2>
                 <p className="text-2xl font-semibold text-gray-700">{account.saved_jobs.length}</p>
               </div>
-              <div className="border border-purple-100 p-6 rounded-lg shadow">
+              <div className="bg-purple-100 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-bold text-purple-800">Subscription</h2>
                 <p className="text-lg text-gray-700">{account.subscription_type}</p>
               </div>
             </div>
 
-            {/* Recent Activity Section */}
+            {/* Applied Jobs Section */}
             <section className="mt-12">
-              <h2 className="text-2xl font-semibold text-gray-800">Recent Activity</h2>
+              <h2 className="text-2xl font-semibold text-gray-800">Applied Jobs</h2>
               <div className="mt-6 bg-white shadow rounded-lg p-6">
                 {account.applied_jobs.map((job) => (
                   <div
-                    key={job.id}
-                    className="flex justify-between items-center py-4 border-b last:border-b-0"
+                    key={job.job_id}
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b last:border-b-0"
                   >
                     <div>
-                      <h3 className="text-lg font-bold text-gray-800">{job.title}</h3>
-                      <p className="text-gray-600">{job.company}</p>
+                      <h3 className="text-lg font-bold text-gray-800">{job.job_title}</h3>
+                      <p className="text-gray-600">{job.employer_name}</p>
+                      <p className="text-sm text-gray-500">{job.job_location}</p>
+                      <p className="text-sm text-gray-500">{job.job_posted_human_readable}</p>
                     </div>
-                    <span
-                      className={`text-sm font-medium px-3 py-1 rounded ${
-                        job.status === 'Applied'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
+                    <a
+                      href={job.job_apply_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 sm:mt-0 text-sm text-blue-600 hover:underline"
                     >
-                      {job.status}
-                    </span>
+                      Apply Now
+                    </a>
                   </div>
                 ))}
               </div>
@@ -85,24 +129,27 @@ export default function Dashboard() {
             <section className="mt-12">
               <h2 className="text-2xl font-semibold text-gray-800">Saved Jobs</h2>
               <div className="mt-6 bg-white shadow rounded-lg p-6">
-                {account.saved_jobs.length > 0 ? (
-                  account.saved_jobs.map((job) => (
-                    <div
-                      key={job.id}
-                      className="flex justify-between items-center py-4 border-b last:border-b-0"
-                    >
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-800">{job.title}</h3>
-                        <p className="text-gray-600">{job.company}</p>
-                      </div>
-                      <span className="text-sm font-medium px-3 py-1 rounded bg-gray-100 text-gray-800">
-                        {job.status}
-                      </span>
+                {account.saved_jobs.map((job) => (
+                  <div
+                    key={job.job_id}
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b last:border-b-0"
+                  >
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-800">{job.job_title}</h3>
+                      <p className="text-gray-600">{job.employer_name}</p>
+                      <p className="text-sm text-gray-500">{job.job_location}</p>
+                      <p className="text-sm text-gray-500">{job.job_posted_human_readable}</p>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-600">No saved jobs yet.</p>
-                )}
+                    <a
+                      href={job.job_apply_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 sm:mt-0 text-sm text-blue-600 hover:underline"
+                    >
+                      View Job
+                    </a>
+                  </div>
+                ))}
               </div>
             </section>
           </>
