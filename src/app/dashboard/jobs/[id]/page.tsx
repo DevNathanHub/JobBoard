@@ -3,6 +3,8 @@
 import { fetchJobDetails } from '@/app/lib/getJobDetails';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Job } from '../../../../../types/job';
+import { FetchJobDetailsResponse } from '../../../../../types/response';
 
 const JobPage: React.FC = () => {
   const params = useParams();
@@ -14,7 +16,8 @@ const JobPage: React.FC = () => {
     : params.id?.slice(0, 22) || '';
   console.log('Job ID:', jobId);
 
-  const [jobDetails, setJobDetails] = useState(null);
+  // Explicitly set `jobDetails` type to `Job | null`
+  const [jobDetails, setJobDetails] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,13 +29,14 @@ const JobPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetchJobDetails(id);
+      const response: any  = await fetchJobDetails(id);
       if (response?.status === 'OK' && response?.data?.length > 0) {
         setJobDetails(response.data[0]);
       } else {
         setError('No job details found.');
       }
     } catch (err) {
+      console.error('Error fetching job details:', err);
       setError('Failed to fetch job details.');
     } finally {
       setIsLoading(false);
@@ -41,7 +45,7 @@ const JobPage: React.FC = () => {
 
   return (
     <div className="p-2">
-      <div className=" mx-auto bg-white  p-2">
+      <div className="mx-auto bg-white p-2">
         {isLoading && <p className="text-gray-600">Loading job details...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {jobDetails ? (

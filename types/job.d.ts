@@ -17,6 +17,8 @@ export interface Job {
     job_posted_at_datetime_utc: string;
     job_city: string;
     job_state: string;
+    job_location: string;
+    job_posted_human_readable: string;
     job_country: string;
     job_latitude: number;
     job_longitude: number;
@@ -41,4 +43,6 @@ export interface Job {
     job_naics_code?: string | null;
     job_naics_name?: string | null;
   }
+  
+
   
