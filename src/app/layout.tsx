@@ -1,4 +1,4 @@
-// src/app/layout.tsx
+
 
 import {
   ClerkProvider,
@@ -28,10 +28,11 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  
   return (
     <html lang="en">
       <ClerkProvider>
-        <body className={`${inter.className} min-h-screen flex flex-col`}>
+        <body className={`${inter.className} min-h-screen flex flex-col  overflow-y-auto w-full`}>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           
           <header className="flex items-center h-20 gap-4 px-4 border-b border-black border-solid sm:px-8 border-opacity-20">
@@ -57,9 +58,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </div>
           </header>
 
-          <main className="grow">{children}</main>
+          <main className="grow overflow-y-auto">{children}</main>
 
-          <footer className="flex items-center h-20 gap-1 px-8 font-medium border-t md:px-20">
+          <footer className="flex items-center bg-blue-500 w-full h-10 gap-1 px-8 font-medium border-t md:px-20 fixed bottom-0">
             <nav className="flex justify-end grow sm:gap-2">
               <a
                 className="flex gap-2 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-100 rounded-md hover:text-gray-800"
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               >
                 <Discord />
               </a>
+            
             </nav>
           </footer>
         </body>

@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <meta name="description" content={metadata.description} />
         {/* Additional head content */}
       </Head>
-      <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+      <div className="flex h-auto flex-col md:flex-row md:overflow-hidden bottom-10 ">
         <div className="w-full flex-none md:w-36">
           <SideNav />
         </div>

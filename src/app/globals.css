@@ -2,29 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4a90e2; /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Rounded edges for a modern look */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #357ab8; /* Darker thumb color on hover */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* Track background color */
+  border-radius: 5px; /* Rounded edges for the track */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* Set the width of the scrollbar */
+  scrollbar-color: #4a90e2 #f0f0f0; /* Thumb and track colors */
+}
+
 .gradient {
-    position: relative;
-    background-image: repeating-linear-gradient(
-      to right,
-      #63DFFA,
-      #6C47FF,
-      #63DFFA
-    );
-    z-index: 1;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    to right,
+    #63dffa,
+    #6c47ff,
+    #63dffa
+  );
+  z-index: 1;
+  background-position-x: 0%;
+  background-size: 200%;
+  animation: gradimate 3s linear infinite;
+  background-clip: text;
+}
+.container{
+  overflow-y: auto;
+}
+@keyframes gradimate {
+  0% {
     background-position-x: 0%;
-    background-size: 200%;
-    animation: gradimate 3s linear infinite;
-    background-clip: text;
   }
-  
-  @keyframes gradimate {
-    0% {
-      background-position-x: 0%;
-    }
-    50% {
-      background-position-x: 100%;
-    }
-    100% {
-      background-position-x: 200%;
-    }
+  50% {
+    background-position-x: 100%;
   }
+  100% {
+    background-position-x: 200%;
+  }
+}
