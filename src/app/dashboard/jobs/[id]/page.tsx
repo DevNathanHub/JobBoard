@@ -7,8 +7,11 @@ import React, { useEffect, useState } from 'react';
 const JobPage: React.FC = () => {
   const params = useParams();
   console.log('Params:', params);
-  // const jobId = "zf5RlFXBZ48D7JS_AAAAAA==";
-  const jobId = params.id.slice(0, 22);
+
+  // Safely handle `params.id` and ensure it is sliced and converted to a string
+  const jobId = Array.isArray(params.id)
+    ? params.id.join('').slice(0, 22)
+    : params.id?.slice(0, 22) || '';
   console.log('Job ID:', jobId);
 
   const [jobDetails, setJobDetails] = useState(null);
